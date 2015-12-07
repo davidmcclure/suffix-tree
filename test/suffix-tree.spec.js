@@ -16,7 +16,7 @@ describe('SuffixTree', function() {
         'A', '5', '6',
       ]);
 
-      let res = tree.query('A');
+      let res = tree.query('A', 2);
 
       // Root
 
@@ -38,12 +38,15 @@ describe('SuffixTree', function() {
 
       expect(res.children[0].children[0].name).to.equal('2');
       expect(res.children[0].children[0].count).to.equal(1);
+      expect(res.children[0].children[0].children).to.undefined;
 
       expect(res.children[1].children[0].name).to.equal('4');
       expect(res.children[1].children[0].count).to.equal(1);
+      expect(res.children[1].children[0].children).to.undefined;
 
       expect(res.children[2].children[0].name).to.equal('6');
       expect(res.children[2].children[0].count).to.equal(1);
+      expect(res.children[2].children[0].children).to.undefined;
 
     });
 
