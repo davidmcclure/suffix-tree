@@ -46,8 +46,9 @@ export default class {
    *
    * @param {String} root - The root token.
    * @param {Number} depth - The depth of the suffix tree.
+   * @param {Number} maxChildren - The max number of children.
    */
-  query(root, depth=10) {
+  query(root, depth=10, maxChildren=null) {
 
     let suffixes = _.map(this.offsets[root], i => {
       return this.seq.slice(i+1, i+1+depth);
@@ -99,13 +100,16 @@ export default class {
 
       if (subtree.children) {
 
-        // Order on count DESC, then name ASC.
-
+        // Sort on count DESC, name ASC.
         subtree.children = _.sortByOrder(
           subtree.children,
           ['count', 'name'],
           ['desc', 'asc'],
         )
+
+        if (maxChildren) {
+          subtree.children = subtree.children.slice(0, maxChildren)
+        }
 
       }
 

@@ -108,7 +108,28 @@ describe('SuffixTree', function() {
 
     });
 
-    // maxChildren
+    it('truncates children at maxChildren', function() {
+
+      let tree = new SuffixTree([
+
+        'A', 'B',
+
+        'A', 'C',
+        'A', 'C',
+
+        'A', 'D',
+        'A', 'D',
+        'A', 'D',
+
+      ]);
+
+      let res = tree.query('A', 1, 2);
+
+      expect(res.children[0].name).to.equal('D');
+      expect(res.children[1].name).to.equal('C');
+      expect(res.children).to.have.length(2);
+
+    });
 
   });
 
