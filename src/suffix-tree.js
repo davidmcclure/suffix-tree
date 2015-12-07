@@ -62,33 +62,29 @@ export default class {
     _.each(suffixes, suffix => {
       _.reduce(suffix, function(parent, token) {
 
-        let leaf;
-
-        // If no children, create the array.
+        // Initialize the children map, if not present.
         if (!parent.children) {
-          leaf = { name: token, count: 1 };
-          parent.children = [leaf];
+          parent.children = {};
         }
 
+        let leaf;
+
+        // If first parent -> child sequence, register new child.
+        if (!_.has(parent.children, token)) {
+
+          leaf = {
+            name: token,
+            count: 1
+          };
+
+          parent.children[token] = leaf;
+
+        }
+
+        // Otherwise, bump the count.
         else {
-
-          // Probe for an existing entry.
-          let existing = _.find(parent.children, function(child) {
-            return child.name == token;
-          });
-
-          // If one is found, bump the count.
-          if (existing) {
-            existing.count++;
-            leaf = existing;
-          }
-
-          // Otherwise, push the new child.
-          else {
-            leaf = { name: token, count: 1 };
-            parent.children.push(leaf);
-          }
-
+          leaf = parent.children[token];
+          leaf.count++;
         }
 
         return leaf;
@@ -100,16 +96,20 @@ export default class {
 
       if (subtree.children) {
 
+        let children = _.values(subtree.children);
+
         // Sort on count DESC, name ASC.
-        subtree.children = _.sortByOrder(
+        children = _.sortByOrder(
           subtree.children,
           ['count', 'name'],
           ['desc', 'asc'],
         )
 
         if (maxChildren) {
-          subtree.children = subtree.children.slice(0, maxChildren)
+          children = children.slice(0, maxChildren)
         }
+
+        subtree.children = children;
 
       }
 
