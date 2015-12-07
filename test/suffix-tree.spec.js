@@ -1,6 +1,8 @@
 
 
 import { expect } from 'chai';
+import { repeat } from './utils';
+
 import SuffixTree from '../src/suffix-tree';
 
 
@@ -49,6 +51,64 @@ describe('SuffixTree', function() {
       expect(res.children[2].children[0].children).to.undefined;
 
     });
+
+    it('accumulates token counts at each level', function() {
+
+      let tree = new SuffixTree([].concat(
+        ['A', 'B'],
+        repeat('X', 10),
+        ['A', 'B', 'C'],
+        repeat('X', 10),
+        ['A', 'B', 'C', 'D'],
+      ));
+
+      let res = tree.query('A', 3);
+
+      // 3x 'B'
+
+      expect(res.children[0].name).to.equal('B');
+      expect(res.children[0].count).to.equal(3);
+
+      // 2x 'C'
+
+      expect(res.children[0].children[0].name).to.equal('C');
+      expect(res.children[0].children[0].count).to.equal(2);
+
+      // 1x 'D'
+
+      expect(res.children[0].children[0].children[0].name).to.equal('D');
+      expect(res.children[0].children[0].children[0].count).to.equal(1);
+
+    });
+
+    it('sorts by count DESC, then name ASC', function() {
+
+      let tree = new SuffixTree([
+
+        'A', 'B',
+
+        'A', 'C',
+        'A', 'C',
+
+        'A', 'D',
+        'A', 'D',
+
+        'A', 'E',
+        'A', 'E',
+        'A', 'E',
+
+      ]);
+
+      let res = tree.query('A', 1);
+
+      expect(res.children[0].name).to.equal('E');
+      expect(res.children[1].name).to.equal('C');
+      expect(res.children[2].name).to.equal('D');
+      expect(res.children[3].name).to.equal('B');
+
+    });
+
+    // maxChildren
 
   });
 

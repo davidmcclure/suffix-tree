@@ -95,6 +95,25 @@ export default class {
       }, tree)
     });
 
+    (function sort(subtree) {
+
+      if (subtree.children) {
+
+        // Order on count DESC, then name ASC.
+
+        subtree.children = _.sortByOrder(
+          subtree.children,
+          ['count', 'name'],
+          ['desc', 'asc'],
+        )
+
+      }
+
+      // Recurse to children.
+      _.each(subtree.children, sort);
+
+    })(tree);
+
     return tree;
 
   }
