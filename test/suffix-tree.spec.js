@@ -16,42 +16,34 @@ describe('SuffixTree', function() {
         'A', '5', '6',
       ]);
 
-      expect(tree.query('A')).to.equal({
-        name: 'A',
-        size: 1,
-        children: [
-          {
-            name: '1',
-            size: 1,
-            children: [
-              {
-                name: '2',
-                size: 1
-              }
-            ]
-          },
-          {
-            name: '3',
-            size: 1,
-            children: [
-              {
-                name: '4',
-                size: 1
-              }
-            ]
-          },
-          {
-            name: '5',
-            size: 1,
-            children: [
-              {
-                name: '6',
-                size: 1
-              }
-            ]
-          },
-        ]
-      });
+      let res = tree.query('A');
+
+      // Root
+
+      expect(res.name).to.equal('A');
+      expect(res.count).to.equal(1);
+
+      // Level 1
+
+      expect(res.children[0].name).to.equal('1');
+      expect(res.children[0].count).to.equal(1);
+
+      expect(res.children[1].name).to.equal('3');
+      expect(res.children[1].count).to.equal(1);
+
+      expect(res.children[2].name).to.equal('5');
+      expect(res.children[2].count).to.equal(1);
+
+      // Level 2
+
+      expect(res.children[0].children[0].name).to.equal('2');
+      expect(res.children[0].children[0].count).to.equal(1);
+
+      expect(res.children[1].children[0].name).to.equal('4');
+      expect(res.children[1].children[0].count).to.equal(1);
+
+      expect(res.children[2].children[0].name).to.equal('6');
+      expect(res.children[2].children[0].count).to.equal(1);
 
     });
 

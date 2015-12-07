@@ -41,4 +41,63 @@ export default class {
   }
 
 
+  /**
+   * Query a suffix tree.
+   *
+   * @param {String} root - The root token.
+   * @param {Number} depth - The depth of the suffix tree.
+   */
+  query(root, depth=10) {
+
+    let suffixes = _.map(this.offsets[root], i => {
+      return this.seq.slice(i+1, i+1+depth);
+    });
+
+    let tree = {
+      name: root,
+      count: 1,
+    };
+
+    _.each(suffixes, suffix => {
+      _.reduce(suffix, function(parent, token) {
+
+        let leaf;
+
+        // If no children, create the array.
+        if (!parent.children) {
+          leaf = { name: token, count: 1 };
+          parent.children = [leaf];
+        }
+
+        else {
+
+          // Probe for an existing entry.
+          let existing = _.find(parent.children, function(child) {
+            return child.name == token;
+          });
+
+          // If one is found, bump the count.
+          if (existing) {
+            existing.count++;
+            leaf = existing;
+          }
+
+          // Otherwise, push the new child.
+          else {
+            leaf = { name: token, count: 1 };
+            parent.children.push(leaf);
+          }
+
+        }
+
+        return leaf;
+
+      }, tree)
+    });
+
+    return tree;
+
+  }
+
+
 }
