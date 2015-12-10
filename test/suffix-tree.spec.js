@@ -40,15 +40,15 @@ describe('SuffixTree', function() {
 
       expect(res.children[0].children[0].name).to.equal('2');
       expect(res.children[0].children[0].count).to.equal(1);
-      expect(res.children[0].children[0].children).to.undefined;
+      expect(res.children[0].children[0].children).to.be.undefined;
 
       expect(res.children[1].children[0].name).to.equal('4');
       expect(res.children[1].children[0].count).to.equal(1);
-      expect(res.children[1].children[0].children).to.undefined;
+      expect(res.children[1].children[0].children).to.be.undefined;
 
       expect(res.children[2].children[0].name).to.equal('6');
       expect(res.children[2].children[0].count).to.equal(1);
-      expect(res.children[2].children[0].children).to.undefined;
+      expect(res.children[2].children[0].children).to.be.undefined;
 
     });
 
@@ -128,6 +128,31 @@ describe('SuffixTree', function() {
       expect(res.children[0].name).to.equal('D');
       expect(res.children[1].name).to.equal('C');
       expect(res.children).to.have.length(2);
+
+    });
+
+    it('accepts multiple token sequences', function() {
+
+      let tree = new SuffixTree(
+        ['A', 'B', 'C'],
+        ['A', 'B', 'D'],
+      );
+
+      let res = tree.query('A', 3);
+
+      // Match 'B' from both sequences.
+      expect(res.children[0].name).to.equal('B');
+      expect(res.children[0].count).to.equal(2);
+
+      // Then 'C' / 'D', with no wrapping.
+
+      expect(res.children[0].children[0].name).to.equal('C');
+      expect(res.children[0].children[0].count).to.equal(1);
+      expect(res.children[0].children[0].children).to.be.undefined;
+
+      expect(res.children[0].children[1].name).to.equal('D');
+      expect(res.children[0].children[1].count).to.equal(1);
+      expect(res.children[0].children[1].children).to.be.undefined;
 
     });
 
