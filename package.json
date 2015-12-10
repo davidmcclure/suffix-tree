@@ -2,7 +2,7 @@
   "name": "suffix-tree",
   "version": "1.0.0",
   "description": "Query suffix trees for d3.cluster() visualizations.",
-  "main": "index.js",
+  "main": "src/suffix-tree.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/davidmcclure/suffix-tree.git"
