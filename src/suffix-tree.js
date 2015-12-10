@@ -11,33 +11,8 @@ export default class {
    *
    * @param {Array<String>} seq - A sequence of tokens.
    */
-  constructor(seq) {
-    this.seq = seq;
-    this._indexOffsets();
-  }
-
-
-  /**
-   * Map token -> [offsets].
-   */
-  _indexOffsets() {
-
-    this.offsets = {};
-
-    _.each(this.seq, (token, i) => {
-
-      // Initialize the offset array, if it doesn't exist.
-      if (!_.has(this.offsets, token)) {
-        this.offsets[token] = [i];
-      }
-
-      // Otherwise, register the new offset.
-      else {
-        this.offsets[token].push(i);
-      }
-
-    });
-
+  constructor(...seqs) {
+    this.seqs = seqs;
   }
 
 
@@ -50,8 +25,15 @@ export default class {
    */
   query(root, depth=10, maxChildren=null) {
 
-    let suffixes = _.map(this.offsets[root], i => {
-      return this.seq.slice(i+1, i+1+depth);
+    let suffixes = [];
+
+    // Probe for suffix sequences.
+    _.each(this.seqs, s => {
+      _.each(s, (token, i) => {
+        if (token == root) {
+          suffixes.push(s.slice(i+1, i+1+depth));
+        }
+      });
     });
 
     let tree = {
